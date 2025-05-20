@@ -7,18 +7,27 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <%- include('./partials/navbar') %>
-    <h1>Lista de Imágenes</h1>
-    <ul>
-        <% if (Array.isArray(images) && images.length > 0) { images.forEach(function(img) { %>
-            <li>
-                <img src="<%= img.url %>" alt="<%= img.titulo %>" width="450">
-                <p><%= img.titulo %></p>
-            </li>
-        <% }) } else { %>
-            <li>No images found.</li>
-        <% } %>
-    </ul>
-
+      <%- include('partials/navbar') %>
+<h1>Lista de Imágenes</h1>
+<ul>
+  <% if (images && images.length) { %>
+    <% images.forEach(img => { %>
+      <% if (img && img.title && img.url) { %>
+        <li>
+          <h2><%= img.title.toUpperCase() %></h2>
+          <img src="<%= img.url %>" alt="<%= img.title %>" width="450">
+          <p>Fecha: <%= img.date %></p>
+          <% if (img.color) { %>
+            <div class="color" style="background-color: <%= img.color %>;">
+              <%= img.color %>
+            </div>
+          <% } %>
+        </li>
+      <% } %>
+    <% }) %>
+  <% } else { %>
+    <li>No hay imágenes para mostrar.</li>
+  <% } %>
+</ul>
 </body>
 </html>

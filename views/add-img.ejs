@@ -7,12 +7,43 @@
      <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form  action="/new-image" method="post">
-        <label for="title">Título: </label>
-<input type="text" name="title" id="title">
-      <label for="URL">URL: </label>
-<input type="text" name="url" id="URL">
-<input type="submit" value="Añadir imagen">
-    </form>
+<%- include('partials/navbar') %>
+
+<form action="/new-image" method="post">
+  <label for="title">Título (máx. 30 caracteres, solo letras, números, espacios o guión bajo):</label>
+  <input 
+    type="text" 
+    name="title" 
+    id="title" 
+    maxlength="30" 
+    pattern="^[a-zA-Z0-9 _áéíóúÁÉÍÓÚñÑüÜ]*$"
+    required
+  >
+
+  <label for="url">URL de la imagen:</label>
+  <input 
+    type="url" 
+    name="url" 
+    id="url" 
+    placeholder="https://example.com/image.jpg"
+    required
+  >
+
+  <label for="date">Fecha (puedes escribirla o seleccionarla):</label>
+  <input 
+    type="date" 
+    name="date" 
+    id="date"
+    required
+  >
+
+  <input type="submit" value="Añadir imagen">
+</form>
+
+<% if (message) { %>
+  <section>
+    <p style="color: red;"><%= message %></p>
+  </section>
+<% } %>
 </body>
 </html>

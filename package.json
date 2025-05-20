@@ -2,7 +2,11 @@
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "node": "^20.19.2"
+    "file-type": "^20.5.0",
+    "get-image-colors": "^4.0.1",
+    "node": "^20.19.2",
+    "node-fetch": "^2.7.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
