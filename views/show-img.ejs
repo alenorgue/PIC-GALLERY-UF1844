@@ -9,7 +9,19 @@
 <body>
   <%- include('partials/navbar') %>
   <h1>Lista de Imágenes</h1>
-<ul>
+  <form id="filterForm">
+  <label for="title">Título:</label>
+  <input type="text" id="title" name="search">
+
+  <label for="startDate">Desde:</label>
+  <input type="date" id="startDate" name="startDate">
+
+  <label for="endDate">Hasta:</label>
+  <input type="date" id="endDate" name="endDate">
+
+  <button type="reset" id="resetButton">Borrar filtros</button>
+</form>
+<ul id="image-list">
   <% if (images && images.length) { %>
     <% images.forEach(img => { %>
       <% if (img && img.title && img.url) { %>
@@ -30,4 +42,50 @@
   <% } %>
 </ul>
 </body>
+<script>
+  const titleInput = document.getElementById('title');
+  const startDateInput = document.getElementById('startDate');
+  const endDateInput = document.getElementById('endDate');
+  const resetButton = document.getElementById('resetButton');
+  const imageList = document.getElementById('imageList');
+
+  async function fetchAndRenderImages() {
+    const search = titleInput.value;
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+
+    const params = new URLSearchParams({ search, startDate, endDate });
+    const res = await fetch(`/api/images?${params}`);
+    const images = await res.json();
+
+    imageList.innerHTML = '';
+    if (images.length === 0) {
+      imageList.innerHTML = '<li>No hay imágenes para mostrar.</li>';
+      return;
+    }
+
+    images.forEach(img => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <h2>${img.title.toUpperCase()}</h2>
+        <img src="${img.url}" alt="${img.title}" width="450">
+        <p>Fecha: ${img.date}</p>
+        ${img.color ? `<div class="color" style="background-color: ${img.color};">${img.color}</div>` : ''}
+      `;
+      imageList.appendChild(li);
+    });
+  }
+
+  // Escucha cambios automáticamente
+  [titleInput, startDateInput, endDateInput].forEach(input => {
+    input.addEventListener('input', fetchAndRenderImages);
+    input.addEventListener('change', fetchAndRenderImages);
+  });
+
+  // Borrar filtros y recargar todas las imágenes
+  resetButton.addEventListener('click', (e) => {
+    setTimeout(fetchAndRenderImages, 0); // Espera a que los inputs se limpien
+  });
+</script>
+
 </html>

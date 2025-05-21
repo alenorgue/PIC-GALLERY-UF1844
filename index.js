@@ -26,6 +26,31 @@ function readImages() {
   }
 }
 
+//Ruta Api para aplicar filtros sin hacer un GET
+
+app.get('/api/images', (req, res) => {
+  const images = readImages();
+  const { search, startDate, endDate } = req.query;
+
+  let filtered = images;
+
+  if (search) {
+    const lowerSearch = search.toLowerCase();
+    filtered = filtered.filter(img => img.title.toLowerCase().includes(lowerSearch));
+  }
+
+  if (startDate) {
+    filtered = filtered.filter(img => new Date(img.date) >= new Date(startDate));
+  }
+
+  if (endDate) {
+    filtered = filtered.filter(img => new Date(img.date) <= new Date(endDate));
+  }
+
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  res.json(filtered);
+});
+
 // Función para guardar una nueva imagen en el JSON
 function saveImages(images) {
 
@@ -91,12 +116,23 @@ res.render("add-img.ejs", {
 // Ruta para mostrar todas las imágenes desde el archivo JSON
 app.get('/show-images', (req, res) => {
   const images = readImages();
+  const { search, startDate, endDate } = req.query;
 
-images.sort((a, b) => {
-    return new Date(b.date) - new Date(a.date);
+  let filtered = images;
+
+  if (search) {
+    const lowerSearch = search.toLowerCase();
+    filtered = filtered.filter(img => img.title.toLowerCase().includes(lowerSearch));
+  }
+
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  res.render('show-img', {
+    images: filtered,
+    query: req.query
   });
-  res.render('show-img', { images }); 
 });
+
+
 
 // Iniciar el servidor
 app.listen(PORT, () => {

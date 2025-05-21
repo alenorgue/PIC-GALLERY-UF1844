@@ -56,7 +56,7 @@ li {
   background-color: #ffffff;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
-  padding: 1.5rem 1rem;
+  padding: 1rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -102,7 +102,6 @@ p {
 nav {
   background-color: var(--primary);
   color: #fff;
-  padding: 1rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -131,6 +130,7 @@ nav a:hover {
 nav a:last-child {
   margin-right: 0;
 }
+
 
 /* Form enhancements (optional, in case you use forms) */
 form {
