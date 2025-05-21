@@ -26,31 +26,6 @@ function readImages() {
   }
 }
 
-//Ruta Api para aplicar filtros sin hacer un GET
-
-app.get('/api/images', (req, res) => {
-  const images = readImages();
-  const { search, startDate, endDate } = req.query;
-
-  let filtered = images;
-
-  if (search) {
-    const lowerSearch = search.toLowerCase();
-    filtered = filtered.filter(img => img.title.toLowerCase().includes(lowerSearch));
-  }
-
-  if (startDate) {
-    filtered = filtered.filter(img => new Date(img.date) >= new Date(startDate));
-  }
-
-  if (endDate) {
-    filtered = filtered.filter(img => new Date(img.date) <= new Date(endDate));
-  }
-
-  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-  res.json(filtered);
-});
-
 // Función para guardar una nueva imagen en el JSON
 function saveImages(images) {
 
@@ -72,7 +47,7 @@ app.get("/new-image", (req, res) => {
 
 // Ruta para manejar el envío del formulario
 app.post("/new-image", async (req, res) => {
-  const { title, url, date } = req.body;
+  const { title, url, date, category } = req.body;
   const images = readImages();
   const errors = [];
 
@@ -104,10 +79,10 @@ const color = await getDominantColorFromUrl(url);
 console.log(`Color obtenido para ${url}: ${color}`);
 
   // Guardar en el archivo JSON
-   images.push({ title, url, date, color });
+   images.push({ title, url, date, color, category });
   saveImages(images);
 
-  console.log("Imagen añadida:", { title, url , date, color });
+  console.log("Imagen añadida:", { title, url , date, color, category });
 res.render("add-img.ejs", {
     message: "La imagen se ha añadido correctamente"
  
@@ -116,7 +91,7 @@ res.render("add-img.ejs", {
 // Ruta para mostrar todas las imágenes desde el archivo JSON
 app.get('/show-images', (req, res) => {
   const images = readImages();
-  const { search, startDate, endDate } = req.query;
+  const { search } = req.query;
 
   let filtered = images;
 
@@ -132,7 +107,29 @@ app.get('/show-images', (req, res) => {
   });
 });
 
+app.post('/delete-image', (req, res) => {
+  const { url } = req.body;
+  let images = readImages();
 
+  // Guardar copia de seguridad antes de eliminar
+  const deletedImage = images.find(img => img.url === url);
+  if (deletedImage) {
+    const backupPath = path.join(__dirname, 'data', 'backup.json');
+    const backup = fs.existsSync(backupPath)
+      ? JSON.parse(fs.readFileSync(backupPath, 'utf8'))
+      : [];
+
+    backup.push(deletedImage);
+    fs.writeFileSync(backupPath, JSON.stringify(backup, null, 2), 'utf8');
+    console.log("Backup realizado correctamente");
+  }
+
+  // Eliminar imagen
+  images = images.filter(img => img.url !== url);
+  saveImages(images);
+ console.log("Imagen eleminada correctamente");
+  res.redirect('/show-images');
+});
 
 // Iniciar el servidor
 app.listen(PORT, () => {

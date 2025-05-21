@@ -2,28 +2,41 @@
   {
     "title": "Zorro",
     "url": "https://upload.wikimedia.org/wikipedia/commons/5/54/Zorro_en_su_habitat.jpg",
-    "date": "2025-05-19"
-  },
-  {
-    "title": "Lobo",
-    "url": "https://imgs.search.brave.com/xMm7PdmUBp6IALD8Y7QESoRokwoKsXFF8k18qKf_Un0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvOTEy/NjAzMzEyL2VzL3Zl/Y3Rvci9sb2Jvcy1k/ZS1sYS1tYW5hZGEu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PXJqTHZVWFh0TEdj/bGtBR0Mtemo1c0JU/SDFEVktlY2gtR28x/TzhZTmc2czA9",
-    "date": "2025-05-20"
+    "date": "2025-05-19",
+    "category": "animales"
   },
   {
     "title": "Zorro",
     "url": "https://imgs.search.brave.com/ynhpxSQ3FGkBi035SHmM1Iqmjtv_LLe4InC-28qIyLw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDg1/MzY0MzcwL2VzL2Zv/dG8vZm94LWVuLWxh/LXByYWRlcmEuanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPVhN/WmpkVmpmSG1MOFJl/VWR6cmFybWJTclpU/b3hXS2NZeDFLQlM0/aHAwekU9",
-    "date": "2025-01-13"
+    "date": "2025-01-13",
+    "category": "animales"
   },
   {
     "title": "Tigre",
     "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Bengal_tiger_%28Panthera_tigris_tigris%29_female_3_crop.jpg/1599px-Bengal_tiger_%28Panthera_tigris_tigris%29_female_3_crop.jpg?20200315230221",
     "date": "2025-05-22",
-    "color": "#cccccc"
+    "color": "#cccccc",
+    "category": "animales"
   },
   {
     "title": "Delfín",
     "url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Eilat_Dolphin_Reef_%283%29.jpg",
     "date": "2025-05-19",
-    "color": "#051c2d"
+    "color": "#051c2d",
+    "category": "animales"
+  },
+  {
+    "title": "Lobo",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Canis_lupus_265b.jpg",
+    "date": "2025-05-21",
+    "color": "#c7c5c6",
+    "category": "animales"
+  },
+  {
+    "title": "Lobos",
+    "url": "https://imgs.search.brave.com/xMm7PdmUBp6IALD8Y7QESoRokwoKsXFF8k18qKf_Un0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvOTEy/NjAzMzEyL2VzL3Zl/Y3Rvci9sb2Jvcy1k/ZS1sYS1tYW5hZGEu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PXJqTHZVWFh0TEdj/bGtBR0Mtemo1c0JU/SDFEVktlY2gtR28x/TzhZTmc2czA9",
+    "date": "2025-05-20",
+    "color": "#2a4248",
+    "category": "animales"
   }
 ]

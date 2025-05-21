@@ -1,91 +1,107 @@
 <!-- views/show-img.ejs -->
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Lista de Imágenes</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
+
 <body>
   <%- include('partials/navbar') %>
-  <h1>Lista de Imágenes</h1>
-  <form id="filterForm">
-  <label for="title">Título:</label>
-  <input type="text" id="title" name="search">
+    <h1>Lista de Imágenes</h1>
+    <form id="filterForm">
+      <label for="search">Título:</label>
+      <input type="text" id="search" placeholder="Buscar por título...">
 
-  <label for="startDate">Desde:</label>
-  <input type="date" id="startDate" name="startDate">
+      <label for="startDate">Desde:</label>
+      <input type="date" id="startDate" name="startDate">
 
-  <label for="endDate">Hasta:</label>
-  <input type="date" id="endDate" name="endDate">
+      <label for="endDate">Hasta:</label>
+      <input type="date" id="endDate" name="endDate">
 
-  <button type="reset" id="resetButton">Borrar filtros</button>
-</form>
-<ul id="image-list">
-  <% if (images && images.length) { %>
-    <% images.forEach(img => { %>
-      <% if (img && img.title && img.url) { %>
-        <li>
-          <h2><%= img.title.toUpperCase() %></h2>
-          <img src="<%= img.url %>" alt="<%= img.title %>" width="450">
-          <p>Fecha: <%= img.date %></p>
-          <% if (img.color) { %>
-            <div class="color" style="background-color: <%= img.color %>;">
-              <%= img.color %>
-            </div>
-          <% } %>
-        </li>
-      <% } %>
-    <% }) %>
-  <% } else { %>
-    <li>No hay imágenes para mostrar.</li>
-  <% } %>
-</ul>
+      <button type="reset" id="resetButton">Borrar filtros</button>
+    </form>
+    <ul id="imageList">
+      <% if (images && images.length) { %>
+        <% images.forEach(img=> { %>
+          <% if (img && img.title && img.url) { %>
+            <li class="image-item" data-title="<%= img.title %>" data-date="<%= img.date %>"
+              data-category="<%= img.category %>">
+              <h3>
+                <%= img.category.toUpperCase() %>
+              </h3>
+              <h2>
+                <%= img.title.toUpperCase() %>
+              </h2>
+              <img src="<%= img.url %>" alt="<%= img.title %>" width="450">
+              <form action="/delete-image" method="POST"
+                onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta imagen?');">
+                <input type="hidden" name="url" value="<%= img.url %>">
+                <button type="submit" class="delete-btn">Eliminar</button>
+              </form>
+              <p>Fecha: <%= img.date %>
+              </p>
+              <% if (img.color) { %>
+                <div class="color" style="background-color: <%= img.color %>;">
+                  <%= img.color %>
+                </div>
+                <% } %>
+
+            </li>
+            <% } %>
+              <% }) %>
+                <% } else { %>
+                  <li>No hay imágenes para mostrar.</li>
+                  <% } %>
+    </ul>
+    <%- include('partials/footer') %>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const searchInput = document.getElementById('search');
+          const startDateInput = document.getElementById('startDate');
+          const endDateInput = document.getElementById('endDate');
+          const clearBtn = document.getElementById('resetButton');
+
+          const imageItems = Array.from(document.querySelectorAll('.image-item'));
+
+          function applyFilters() {
+            const search = searchInput.value.trim().toLowerCase();
+            const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+            const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+
+            imageItems.forEach(item => {
+              const title = item.dataset.title.toLowerCase();
+              const date = new Date(item.dataset.date);
+
+              const matchTitle = !search || title.includes(search);
+              const matchStart = !startDate || date >= startDate;
+              const matchEnd = !endDate || date <= endDate;
+
+              if (matchTitle && matchStart && matchEnd) {
+                item.style.display = '';
+              } else {
+                item.style.display = 'none';
+              }
+            });
+          }
+
+          [searchInput, startDateInput, endDateInput].forEach(input => {
+            input.addEventListener('input', applyFilters);
+          });
+
+          clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            startDateInput.value = '';
+            endDateInput.value = '';
+            applyFilters();
+          });
+
+          applyFilters(); // aplicar al cargar
+        });
+      </script>
+
 </body>
-<script>
-  const titleInput = document.getElementById('title');
-  const startDateInput = document.getElementById('startDate');
-  const endDateInput = document.getElementById('endDate');
-  const resetButton = document.getElementById('resetButton');
-  const imageList = document.getElementById('imageList');
-
-  async function fetchAndRenderImages() {
-    const search = titleInput.value;
-    const startDate = startDateInput.value;
-    const endDate = endDateInput.value;
-
-    const params = new URLSearchParams({ search, startDate, endDate });
-    const res = await fetch(`/api/images?${params}`);
-    const images = await res.json();
-
-    imageList.innerHTML = '';
-    if (images.length === 0) {
-      imageList.innerHTML = '<li>No hay imágenes para mostrar.</li>';
-      return;
-    }
-
-    images.forEach(img => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <h2>${img.title.toUpperCase()}</h2>
-        <img src="${img.url}" alt="${img.title}" width="450">
-        <p>Fecha: ${img.date}</p>
-        ${img.color ? `<div class="color" style="background-color: ${img.color};">${img.color}</div>` : ''}
-      `;
-      imageList.appendChild(li);
-    });
-  }
-
-  // Escucha cambios automáticamente
-  [titleInput, startDateInput, endDateInput].forEach(input => {
-    input.addEventListener('input', fetchAndRenderImages);
-    input.addEventListener('change', fetchAndRenderImages);
-  });
-
-  // Borrar filtros y recargar todas las imágenes
-  resetButton.addEventListener('click', (e) => {
-    setTimeout(fetchAndRenderImages, 0); // Espera a que los inputs se limpien
-  });
-</script>
 
 </html>

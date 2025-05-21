@@ -36,6 +36,17 @@
     id="date"
     required
   >
+    <label for="category">Categoría:</label>
+  <select name="category" id="category" required>
+    <option value="" disabled selected>Elige una categoría</option>
+    <option value="paisajes">Paisajes</option>
+    <option value="animales">Animales</option>
+    <option value="coches">Coches</option>
+    <option value="artisticos">Artísticos</option>
+    <option value="anime">Anime</option>
+    <option value="cine">Cine</option>
+    <option value="otros">Otros</option>
+  </select>
 
   <input type="submit" value="Añadir imagen">
 </form>
@@ -45,5 +56,6 @@
     <p style="color: red;"><%= message %></p>
   </section>
 <% } %>
+  <%- include('partials/footer') %>
 </body>
 </html>
