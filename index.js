@@ -4,7 +4,7 @@ const path = require('path');
 const PORT = 3000;
 const fs = require('fs');
 const getDominantColorFromUrl = require('./utils/getColor');
-
+const { v4: uuidv4 } = require('uuid');
 const DATA_PATH = path.join(__dirname, 'data', 'images.json');
 
 app.set('view engine', 'ejs');
@@ -50,7 +50,8 @@ app.post("/new-image", async (req, res) => {
   const { title, url, date, category } = req.body;
   const images = readImages();
   const errors = [];
-
+  const id = uuidv4();
+  
  const titlePattern = /^[a-zA-Z0-9 _áéíóúÁÉÍÓÚñÑüÜ]{1,30}$/;
   if (!titlePattern.test(title)) {
     errors.push('Título inválido.');
@@ -79,7 +80,7 @@ const color = await getDominantColorFromUrl(url);
 console.log(`Color obtenido para ${url}: ${color}`);
 
   // Guardar en el archivo JSON
-   images.push({ title, url, date, color, category });
+images.push({ id, title, url, date, color, category });
   saveImages(images);
 
   console.log("Imagen añadida:", { title, url , date, color, category });
@@ -97,7 +98,8 @@ app.get('/show-images', (req, res) => {
 
   if (search) {
     const lowerSearch = search.toLowerCase();
-    filtered = filtered.filter(img => img.title.toLowerCase().includes(lowerSearch));
+    filtered = filtered.filter(img => img.title.toLowerCase().includes(lowerSearch)||
+    img.category.toLowerCase().includes(lowerSearch));
   }
 
   filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -108,11 +110,11 @@ app.get('/show-images', (req, res) => {
 });
 
 app.post('/delete-image', (req, res) => {
-  const { url } = req.body;
+  const { id } = req.body;
   let images = readImages();
 
   // Guardar copia de seguridad antes de eliminar
-  const deletedImage = images.find(img => img.url === url);
+  const deletedImage = images.find(img => img.id === id);
   if (deletedImage) {
     const backupPath = path.join(__dirname, 'data', 'backup.json');
     const backup = fs.existsSync(backupPath)
@@ -125,7 +127,7 @@ app.post('/delete-image', (req, res) => {
   }
 
   // Eliminar imagen
-  images = images.filter(img => img.url !== url);
+  images = images.filter(img => img.id !=id);
   saveImages(images);
  console.log("Imagen eleminada correctamente");
   res.redirect('/show-images');

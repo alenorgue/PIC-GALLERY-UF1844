@@ -1,17 +1,13 @@
 [
   {
+    "id": "4ecb6f79-4cbf-43d9-a491-1546a2ed8231",
     "title": "Zorro",
     "url": "https://upload.wikimedia.org/wikipedia/commons/5/54/Zorro_en_su_habitat.jpg",
     "date": "2025-05-19",
     "category": "animales"
   },
   {
-    "title": "Zorro",
-    "url": "https://imgs.search.brave.com/ynhpxSQ3FGkBi035SHmM1Iqmjtv_LLe4InC-28qIyLw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDg1/MzY0MzcwL2VzL2Zv/dG8vZm94LWVuLWxh/LXByYWRlcmEuanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPVhN/WmpkVmpmSG1MOFJl/VWR6cmFybWJTclpU/b3hXS2NZeDFLQlM0/aHAwekU9",
-    "date": "2025-01-13",
-    "category": "animales"
-  },
-  {
+    "id": "f4c3e199-09b4-4930-b8a5-00bdee91132e",
     "title": "Tigre",
     "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Bengal_tiger_%28Panthera_tigris_tigris%29_female_3_crop.jpg/1599px-Bengal_tiger_%28Panthera_tigris_tigris%29_female_3_crop.jpg?20200315230221",
     "date": "2025-05-22",
@@ -19,6 +15,7 @@
     "category": "animales"
   },
   {
+    "id": "697a6bd6-bc8d-43f4-8266-30345f77f548",
     "title": "Delfín",
     "url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Eilat_Dolphin_Reef_%283%29.jpg",
     "date": "2025-05-19",
@@ -26,6 +23,7 @@
     "category": "animales"
   },
   {
+    "id": "ee8a17cf-41e9-4c55-9cc1-e69fc8b186b2",
     "title": "Lobo",
     "url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Canis_lupus_265b.jpg",
     "date": "2025-05-21",
@@ -33,10 +31,18 @@
     "category": "animales"
   },
   {
+    "id": "f6c30f85-8d31-4561-90d3-4a8fa2b1ac27",
     "title": "Lobos",
     "url": "https://imgs.search.brave.com/xMm7PdmUBp6IALD8Y7QESoRokwoKsXFF8k18qKf_Un0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvOTEy/NjAzMzEyL2VzL3Zl/Y3Rvci9sb2Jvcy1k/ZS1sYS1tYW5hZGEu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PXJqTHZVWFh0TEdj/bGtBR0Mtemo1c0JU/SDFEVktlY2gtR28x/TzhZTmc2czA9",
     "date": "2025-05-20",
     "color": "#2a4248",
+    "category": "animales"
+  },
+  {
+    "id": "34a5b0db-f94c-46a7-9e0c-205e2e9c858e",
+    "title": "Zorro",
+    "url": "https://imgs.search.brave.com/ynhpxSQ3FGkBi035SHmM1Iqmjtv_LLe4InC-28qIyLw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDg1/MzY0MzcwL2VzL2Zv/dG8vZm94LWVuLWxh/LXByYWRlcmEuanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPVhN/WmpkVmpmSG1MOFJl/VWR6cmFybWJTclpU/b3hXS2NZeDFLQlM0/aHAwekU9",
+    "date": "2025-01-13",
     "category": "animales"
   }
 ]

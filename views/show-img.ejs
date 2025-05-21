@@ -36,11 +36,7 @@
                 <%= img.title.toUpperCase() %>
               </h2>
               <img src="<%= img.url %>" alt="<%= img.title %>" width="450">
-              <form action="/delete-image" method="POST"
-                onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta imagen?');">
-                <input type="hidden" name="url" value="<%= img.url %>">
-                <button type="submit" class="delete-btn">Eliminar</button>
-              </form>
+              
               <p>Fecha: <%= img.date %>
               </p>
               <% if (img.color) { %>
@@ -48,7 +44,10 @@
                   <%= img.color %>
                 </div>
                 <% } %>
-
+              <form action="/delete-image" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta imagen?');">
+                <input type="hidden" name="id" value="<%= img.id %>">
+                <button type="submit" class="delete-btn">X</button>
+              </form>
             </li>
             <% } %>
               <% }) %>
