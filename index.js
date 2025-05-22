@@ -1,4 +1,7 @@
 const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+require('./auth');
 const app = express();
 const path = require('path');
 const PORT = 3000;
@@ -7,14 +10,25 @@ const getDominantColorFromUrl = require('./utils/getColor');
 const { v4: uuidv4 } = require('uuid');
 const DATA_PATH = path.join(__dirname, 'data', 'images.json');
 
+
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Middleware para procesar peticiones POST que vengan de un formulario
+app.use(session({ secret: 'cats'}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+//Función para verificar si el usuario está loggeado
+function isLoggedIn(req, res, next){
+  req.user ? next() : res.render('login-required.ejs');
+}
+
 // Función para leer las imágenes desde el archivo JSON
 function readImages() {
   try {
@@ -31,15 +45,47 @@ function saveImages(images) {
 
   fs.writeFileSync(DATA_PATH, JSON.stringify(images, null, 2), 'utf8');
 }
-
-// Ruta principal
+//Ruta de autentificacion
 app.get("/", (req, res) => {
-  const images = readImages(); // leer las fotos del JSON
-  res.render("home", { images: images }); // pasar 'images' a la vista
+ res.send("<a href='/auth/google'>Autentificación con Google</a>")
+});
+
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['email', 'profile'] })
+);
+
+app.get('/google/callback',
+  passport.authenticate('google', {
+    successRedirect: '/home',
+    failureRedirect: 'auth/failure',
+  })
+);
+app.get('/auth/failure', (req, res) => {
+  res.send('Error durante la auntentificación...');
+});
+
+// Ruta a home
+app.get("/home", (req, res) => {
+   const images = readImages();
+  const { search } = req.query;
+
+  let filtered = images;
+
+  if (search) {
+    const lowerSearch = search.toLowerCase();
+    filtered = filtered.filter(img => img.title.toLowerCase().includes(lowerSearch)||
+    img.category.toLowerCase().includes(lowerSearch));
+  }
+
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  res.render('home', {
+    images: filtered,
+    query: req.query
+  });
 });
 
 // Ruta para mostrar el formulario de nueva imagen
-app.get("/new-image", (req, res) => {
+app.get("/new-image", isLoggedIn, (req, res) => {
    res.render("add-img.ejs", {
     message: undefined // no tengo nada que informar al usuario por el momento
   });
@@ -90,7 +136,7 @@ res.render("add-img.ejs", {
 })});
 
 // Ruta para mostrar todas las imágenes desde el archivo JSON
-app.get('/show-images', (req, res) => {
+app.get('/show-images', isLoggedIn, (req, res) => {
   const images = readImages();
   const { search } = req.query;
 
@@ -132,6 +178,13 @@ app.post('/delete-image', (req, res) => {
  console.log("Imagen eleminada correctamente");
   res.redirect('/show-images');
 });
+//Ruta para logout
+
+app.get('/logout', (req, res )=> {
+  req.logout();
+  req.session.destroy();
+  res.send(`Hasta la próxima visita ${req.user.displayName}`)
+})
 
 // Iniciar el servidor
 app.listen(PORT, () => {

@@ -7,7 +7,18 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-      <%- include('partials/navbar') %>
+    <nav>
+  <ul>
+    <li><a href="/home">Página inicial</a></li>
+    <li><a href="/show-images">Galería de Imágenes</a></li>
+    <li><a href="/new-image">Añadir Imagen</a></li>
+    <form action="/home" method="get" style="display:inline;">
+    <input type="text" name="search" placeholder="Buscar...">
+    <button type="submit">Buscar</button>
+  </form>
+  </ul>
+</nav>
+
 <h1>Bienvenido/a a la galería </h1>
 <ul>
   <% if (images && images.length) { %>
