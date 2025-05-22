@@ -11,7 +11,8 @@
 <body>
   <%- include('partials/navbar') %>
     <h1>Lista de Imágenes</h1>
-    <form id="filterForm">
+   <div class="container">
+    <div class="filterForm"> <form class="filterForm" id="filterForm">
       <label for="search">Título:</label>
       <input type="text" id="search" placeholder="Buscar por título...">
 
@@ -22,8 +23,8 @@
       <input type="date" id="endDate" name="endDate">
 
       <button type="reset" id="resetButton">Borrar filtros</button>
-    </form>
-    <ul id="imageList">
+    </form></div>
+    <div class="img-gallery"><ul id="imageList">
       <% if (images && images.length) { %>
         <% images.forEach(img=> { %>
           <% if (img && img.title && img.url) { %>
@@ -54,7 +55,7 @@
                 <% } else { %>
                   <li>No hay imágenes para mostrar.</li>
                   <% } %>
-    </ul>
+    </ul></div></div>
     <%- include('partials/footer') %>
       <script>
         document.addEventListener('DOMContentLoaded', () => {

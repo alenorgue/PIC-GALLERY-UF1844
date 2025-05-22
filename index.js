@@ -53,7 +53,22 @@ function saveImages(images) {
 }
 //Ruta de autentificacion
 app.get("/", (req, res) => {
- res.send("<a href='/auth/google'>Autentificación con Google</a>")
+   const images = readImages();
+  const { search } = req.query;
+
+  let filtered = images;
+
+  if (search) {
+    const lowerSearch = search.toLowerCase();
+    filtered = filtered.filter(img => img.title.toLowerCase().includes(lowerSearch)||
+    img.category.toLowerCase().includes(lowerSearch));
+  }
+
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  res.render('home', {
+    images: filtered,
+    query: req.query
+  });
 });
 
 app.get('/auth/google',
@@ -191,7 +206,7 @@ app.get('/logout', (req, res )=> {
   const displayName = req.user ? req.user.displayName : 'usuario';
   req.logout(() => {
     req.session.destroy();
-    res.send(`Hasta la próxima visita ${displayName}`);
+    res.render('goodbye', { name: displayName });
   });
 })
 

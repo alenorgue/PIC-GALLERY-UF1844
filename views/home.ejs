@@ -9,47 +9,53 @@
 </head>
 
 <body>
-  <nav>
-    <ul>
-      <li><a href="/home">Página inicial</a></li>
-      <li><a href="/show-images">Galería de Imágenes</a></li>
-      <li><a href="/new-image">Añadir Imagen</a></li>
-      <li><a href="/auth/google">Iniciar sesión</a></li>
-      <li><a href="/logout">Cerrar sesión</a></li>
-      <form action="/home" method="get" style="display:inline;">
-        <input type="text" name="search" placeholder="Buscar...">
-        <button type="submit">Buscar</button>
-      </form>
-    </ul>
-  </nav>
+  <%- include('partials/navbar') %>
 
 <h1>Bienvenido/a a la galería</h1>
   <p>Esta es una galería de imágenes donde puedes ver y añadir imágenes.</p>
-  <ul>
-    <% if (images && images.length) { %>
-      <% images.forEach(img=> { %>
-        <% if (img && img.title && img.url) { %>
-          <li>
-            <h2>
-              <%= img.title.toUpperCase() %>
-            </h2>
-            <img src="<%= img.url %>" alt="<%= img.title %>" width="450">
-            <p>Fecha: <%= img.date %>
-            </p>
-            <% if (img.color) { %>
-              <div class="color" style="background-color: <%= img.color %>;">
-                <%= img.color %>
-              </div>
-              <% } %>
-          </li>
-          <% } %>
-            <% }) %>
-              <% } else { %>
-                <li>No hay imágenes para mostrar.</li>
+ <div class="container-home">
+    
+   <ul id="imageList">
+      <% if (images && images.length) { %>
+        <% images.forEach(img=> { %>
+          <% if (img && img.title && img.url) { %>
+            <li class="image-item" data-title="<%= img.title %>" data-date="<%= img.date %>"
+              data-category="<%= img.category %>">
+              <h3>
+                <%= img.category.toUpperCase() %>
+              </h3>
+              <h2>
+                <%= img.title.toUpperCase() %>
+              </h2>
+              <img src="<%= img.url %>" alt="<%= img.title %>" width="450">
+              
+              <p>Fecha: <%= img.date %>
+              </p>
+              <% if (img.color) { %>
+                <div class="color" style="background-color: <%= img.color %>;">
+                  <%= img.color %>
+                </div>
                 <% } %>
-  </ul>
+              
+            </li>
+            <% } %>
+              <% }) %>
+                <% } else { %>
+                  <li>No hay imágenes para mostrar.</li>
+                  <% } %>
+    </ul></div>
 
   <%- include('partials/footer') %>
+  <script>
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('#nav-menu');
+
+  hamburger.addEventListener('click', () => {
+    const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', !isExpanded);
+    navMenu.classList.toggle('show');
+  });
+</script>
 </body>
 
 </html>

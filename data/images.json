@@ -46,5 +46,13 @@
     "date": "2025-05-23",
     "color": "#202c26",
     "category": "animales"
+  },
+  {
+    "id": "9d2515a1-4968-4bbb-906f-4bb93b5329a9",
+    "title": "Grand Canyon",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Grand_Canyon_Hopi_Point_with_rainbow_2013.jpg",
+    "date": "2025-05-23",
+    "color": "#6f585a",
+    "category": "paisajes"
   }
 ]

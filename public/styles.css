@@ -10,12 +10,6 @@
   --transition-fast: 0.2s ease-in-out;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -41,8 +35,26 @@ h1 {
 h2 {
   text-transform: uppercase;
 }
-
-ul {
+.container-home ul {
+  list-style: none;
+  padding: 0;
+  margin: 2rem auto;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+}
+.container-home li {
+  background-color: #ffffff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.container ul {
   list-style: none;
   padding: 0;
   margin: 2rem auto;
@@ -52,7 +64,7 @@ ul {
   gap: 2rem;
 }
 
-li {
+.container li {
   background-color: #ffffff;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
@@ -99,40 +111,121 @@ p {
 }
 
 /* Navbar styles */
-nav {
+.navbar {
   background-color: var(--primary);
   color: #fff;
+  box-shadow: 0 2px 8px rgba(30, 42, 56, 0.05);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  box-shadow: 0 2px 8px rgba(30, 42, 56, 0.05);
+  max-width: 70vw;
+  margin: 0 auto;
+  width: 100%;
 }
 
-nav a {
-  color: #020202;
+.nav-start {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  color: white;
   text-decoration: none;
-  margin-right: 1.5rem;
   font-weight: 500;
-  font-size: 1rem;
+  padding: 0.5rem;
   transition: color var(--transition-fast);
 }
 
-nav a:focus {
-  outline: var(--focus-outline);
-  outline-offset: 4px;
-}
-
-nav a:hover {
+.nav-links a:hover {
   color: var(--accent);
 }
 
-nav a:last-child {
-  margin-right: 0;
+.formSearch {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  max-width: 250px;
+  flex: 1 1 auto;
+  margin: 0.2rem;
+    padding: 0.2rem;
+    flex-direction: row;
+}
+
+.formSearch input[type="text"] {
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.formSearch button {
+  padding: 0.5rem 1rem;
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.formSearch button:hover {
+  background-color: #29b6f6;
+}
+
+/* Hamburguesa para móviles */
+.hamburger {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .formSearch {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .nav-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 
-/* Form enhancements (optional, in case you use forms) */
+/* Form enhancements  */
 form {
   max-width: 600px;
   margin: 2rem auto;
@@ -179,19 +272,14 @@ input[type="submit"] {
 input[type="submit"]:hover {
   background-color: var(--accent);
 }
+div.container {
+  display: flex;
+}
+div.filterForm{
+  width: 20vw;
+  padding: 10px;
+}
 
-/* Responsive fix for very narrow screens */
-@media (max-width: 480px) {
-  nav {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  nav a {
-    margin: 0.5rem 0;
-  }
-
-  form {
-    padding: 1rem;
-  }
+footer {
+  margin-top: 15vh;
 }
