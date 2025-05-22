@@ -18,7 +18,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Middleware para procesar peticiones POST que vengan de un formulario
-app.use(session({ secret: 'cats'}));
+app.use(session({ secret: 'cats',  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // debe ser true si usas HTTPS
+    maxAge: 24 * 60 * 60 * 1000 // 1 día
+  }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
@@ -155,7 +161,7 @@ app.get('/show-images', isLoggedIn, (req, res) => {
   });
 });
 
-app.post('/delete-image', (req, res) => {
+app.post('/delete-image', isLoggedIn, (req, res) => {
   const { id } = req.body;
   let images = readImages();
 
@@ -178,12 +184,15 @@ app.post('/delete-image', (req, res) => {
  console.log("Imagen eleminada correctamente");
   res.redirect('/show-images');
 });
+
 //Ruta para logout
 
 app.get('/logout', (req, res )=> {
-  req.logout();
-  req.session.destroy();
-  res.send(`Hasta la próxima visita ${req.user.displayName}`)
+  const displayName = req.user ? req.user.displayName : 'usuario';
+  req.logout(() => {
+    req.session.destroy();
+    res.send(`Hasta la próxima visita ${displayName}`);
+  });
 })
 
 // Iniciar el servidor
