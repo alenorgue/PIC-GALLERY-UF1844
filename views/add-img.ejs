@@ -8,8 +8,7 @@
 </head>
 <body>
 <%- include('partials/navbar') %>
-
-<form action="/new-image" method="post">
+<form id="imageForm" action="/new-image" method="POST" enctype="multipart/form-data">
   <label for="title">Título (máx. 30 caracteres, solo letras, números, espacios o guión bajo):</label>
   <input 
     type="text" 
@@ -20,14 +19,16 @@
     required
   >
 
-  <label for="url">URL de la imagen:</label>
+  <label for="url">URL de la imagen (opcional si subes un archivo):</label>
   <input 
     type="url" 
     name="url" 
     id="url" 
     placeholder="https://example.com/image.jpg"
-    required
   >
+
+  <label for="image">O selecciona una imagen para subir:</label>
+  <input type="file" name="image" id="image" accept="image/*">
 
   <label for="date">Fecha (puedes escribirla o seleccionarla):</label>
   <input 
@@ -36,7 +37,8 @@
     id="date"
     required
   >
-    <label for="category">Categoría:</label>
+
+  <label for="category">Categoría:</label>
   <select name="category" id="category" required>
     <option value="" disabled selected>Elige una categoría</option>
     <option value="paisajes">Paisajes</option>
@@ -51,11 +53,26 @@
   <input type="submit" value="Añadir imagen">
 </form>
 
+
+
 <% if (message) { %>
   <section>
     <p style="color: red;"><%= message %></p>
   </section>
 <% } %>
+
   <%- include('partials/footer') %>
+  
+  <script>
+  document.getElementById('imageForm').addEventListener('submit', function (e) {
+    const url = document.getElementById('url').value.trim();
+    const file = document.getElementById('image').files.length;
+
+    if (!url && !file) {
+      e.preventDefault();
+      alert("Por favor, introduce una URL de imagen o selecciona un archivo antes de enviar el formulario.");
+    }
+  });
+</script>
 </body>
 </html>
