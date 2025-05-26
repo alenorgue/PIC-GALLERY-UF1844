@@ -16,6 +16,18 @@
       <label for="search">Título:</label>
       <input type="text" id="search" placeholder="Buscar por título...">
 
+        <label for="category">Categoría:</label>
+  <select name="category" id="category" required>
+    <option value="" disabled selected>Elige una categoría</option>
+    <option value="paisajes">Paisajes</option>
+    <option value="animales">Animales</option>
+    <option value="coches">Coches</option>
+    <option value="artisticos">Artísticos</option>
+    <option value="anime">Anime</option>
+    <option value="cine">Cine</option>
+    <option value="otros">Otros</option>
+  </select>
+
       <label for="startDate">Desde:</label>
       <input type="date" id="startDate" name="startDate">
 
@@ -24,6 +36,7 @@
 
       <button type="reset" id="resetButton">Borrar filtros</button>
     </form></div>
+    <div id="noResults" style="display:none; text-align:center; color:#c00; font-weight:bold; margin:auto 5rem; padding: auto;">Imágenes no disponibles para esos filtros.</div>
     <div class="img-gallery"><ul id="imageList">
       <% if (images && images.length) { %>
         <% images.forEach(img=> { %>
@@ -31,7 +44,7 @@
             <li class="image-item" data-title="<%= img.title %>" data-date="<%= img.date %>"
               data-category="<%= img.category %>">
               <h3>
-                <%= img.category.toUpperCase() %>
+                <%= img.category ? img.category.toUpperCase() : '' %>
               </h3>
               <h2>
                 <%= img.title.toUpperCase() %>
@@ -41,9 +54,7 @@
               <p>Fecha: <%= img.date %>
               </p>
               <% if (img.color) { %>
-                <div class="color" style="background-color: <%= img.color %>;">
-                  <%= img.color %>
-                </div>
+                <div class="color" style="background-color: <%= img.color %>"><%= img.color %></div>
                 <% } %>
               <form action="/delete-image" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta imagen?');">
                 <input type="hidden" name="id" value="<%= img.id %>">
@@ -60,39 +71,51 @@
       <script>
         document.addEventListener('DOMContentLoaded', () => {
           const searchInput = document.getElementById('search');
+          const categorySelect = document.getElementById('category');
           const startDateInput = document.getElementById('startDate');
           const endDateInput = document.getElementById('endDate');
           const clearBtn = document.getElementById('resetButton');
 
           const imageItems = Array.from(document.querySelectorAll('.image-item'));
+          const noResultsDiv = document.getElementById('noResults');
 
           function applyFilters() {
             const search = searchInput.value.trim().toLowerCase();
+            const category = categorySelect.value.toLowerCase();
+            const selectedCategory = category !== '' ? category : null;
             const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
             const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
 
+            let hasResults = false;
+
             imageItems.forEach(item => {
               const title = item.dataset.title.toLowerCase();
+              const category = item.dataset.category.toLowerCase();
               const date = new Date(item.dataset.date);
 
               const matchTitle = !search || title.includes(search);
+              const matchCategory = !selectedCategory || category === selectedCategory;
               const matchStart = !startDate || date >= startDate;
               const matchEnd = !endDate || date <= endDate;
 
-              if (matchTitle && matchStart && matchEnd) {
+              if (matchTitle && matchStart && matchEnd && (!selectedCategory || category === selectedCategory)) {
                 item.style.display = '';
+                hasResults = true;
               } else {
                 item.style.display = 'none';
               }
             });
+
+            noResultsDiv.style.display = hasResults ? 'none' : '';
           }
 
-          [searchInput, startDateInput, endDateInput].forEach(input => {
+          [searchInput, categorySelect, startDateInput, endDateInput].forEach(input => {
             input.addEventListener('input', applyFilters);
           });
 
           clearBtn.addEventListener('click', () => {
             searchInput.value = '';
+            categorySelect.value = '';
             startDateInput.value = '';
             endDateInput.value = '';
             applyFilters();
