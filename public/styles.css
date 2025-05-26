@@ -134,7 +134,7 @@ p {
 .nav-start {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 40vw;
 }
 
 .nav-links {
@@ -163,6 +163,7 @@ p {
   margin: 0.2rem;
     padding: 0.2rem;
     flex-direction: row;
+     margin-left: auto;
 }
 
 .formSearch input[type="text"] {

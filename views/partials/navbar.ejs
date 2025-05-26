@@ -8,16 +8,20 @@
       <a href="/home">Página inicial</a>
       <a href="/show-images">Galería</a>
       <a href="/new-image">Añadir Imagen</a>
-      <a href="/auth/google">Iniciar sesión</a>
-      <a href="/logout">Cerrar sesión</a>
+       <% if (!user) { %>
+       <a href="/auth/google">Iniciar sesión</a>
+        <% } else { %>
+        <a href="/logout">Cerrar sesión</a>
+      <% } %>  
     </div>
-  </div>
-  <form class="formSearch" action="/show-images" method="get">
+    <div class="formSearch"> <form class="formSearch" action="/show-images" method="get">
     <input type="text" name="search" placeholder="Buscar...">
     <button type="submit">Buscar</button>
-  </form>
+  </form></div>
+</div>
 </nav>
 <script>
+  // Script to handle the hamburger menu toggle
   const hamburger = document.querySelector('.hamburger');
   const navMenu = document.querySelector('#nav-menu');
 

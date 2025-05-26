@@ -32,6 +32,12 @@ app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Middleware para que la variable 'user' esté disponible en todas las vistas EJS
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
 //Función para verificar si el usuario está loggeado
 function isLoggedIn(req, res, next){
   req.user ? next() : res.render('login-required.ejs');
