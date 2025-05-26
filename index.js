@@ -253,7 +253,14 @@ app.get('/logout', (req, res )=> {
     req.session.destroy();
     res.render('goodbye', { name: displayName });
   });
-})
+});
+
+// Middleware para manejar errores 404
+app.use((req, res) => {
+  res.status(404).render('404', {
+    url: req.originalUrl
+  });
+});
 
 // Iniciar el servidor
 app.listen(PORT, () => {

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Página no encontrada</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+  <div class="container" style="text-align:center; margin-top: 50px; display: flex; flex-direction: column;">
+    <h1 style="font-size:3em; color:#c00;">404</h1>
+    <h2>Página no encontrada</h2>
+    <p>La ruta <span style="color:#555;"><%= url %></span> no existe en la galería.</p>
+    <a href="/home" class="btn" style="display:inline-block; margin-top:20px; padding:10px 20px; background:#007bff; color:#fff; border-radius:5px; text-decoration:none;">Volver al inicio</a>
+  </div>
+  <%- include('partials/footer') %>
+</body>
+</html>
