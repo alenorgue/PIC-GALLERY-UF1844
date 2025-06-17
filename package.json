@@ -7,6 +7,8 @@
     "express-session": "^1.18.1",
     "file-type": "^20.5.0",
     "get-image-colors": "^4.0.1",
+    "mongobd": "^0.0.1-security.0",
+    "mongoose": "^8.16.0",
     "multer": "^2.0.0",
     "node": "^20.19.2",
     "node-fetch": "^2.7.0",
