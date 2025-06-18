@@ -51,8 +51,7 @@
               </h2>
               <img src="<%= img.url %>" alt="<%= img.title %>" width="450">
               
-              <p>Fecha: <%= img.date %>
-              </p>
+              <p>Fecha: <%= img.date ? img.date.toISOString().slice(0, 10) : '' %></p>
               <% if (img.color) { %>
                 <div class="color" style="background-color: <%= img.color %>"><%= img.color %></div>
                 <% } %>

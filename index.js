@@ -5,7 +5,7 @@ require('./auth');
 const app = express();
 const path = require('path');
 const axios = require('axios');
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 5000
 const fs = require('fs');
 const getDominantColorFromUrl = require('./utils/getColor');
 const { v4: uuidv4 } = require('uuid');
@@ -52,6 +52,11 @@ app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.get('/auth/google',
+  passport.authenticate('google', { 
+    scope: ['email', 'profile']
+  })
+);
 
 // Definición del esquema y modelo de Mongoose para las imágenes
  const imageSchema = new mongoose.Schema({
@@ -68,7 +73,7 @@ app.use(express.json());
         category: {
             type: String,
             required: true,
-            enum: ['Paisajes', 'Animales', 'Coches', 'artisticos', 'anime', 'cine', 'otros']
+            enum: ['Paisajes', 'Animales', 'Coches', 'Artisticos', 'Anime', 'Cine', 'Otros']
         }
     });
 
@@ -114,7 +119,7 @@ app.get("/", async (req, res) => {
 app.get('/google/callback',
   passport.authenticate('google', {
     successRedirect: '/show-images',
-    failureRedirect: 'auth/failure',
+    failureRedirect: '/auth/failure'
   })
 );
 app.get('/auth/failure', (req, res) => {
@@ -122,8 +127,8 @@ app.get('/auth/failure', (req, res) => {
 });
 
 // Ruta a home
-app.get("/home", (req, res) => {
-   const images = readImages();
+app.get("/home", async (req, res) => {
+   const images = await Image.find({});
   const { search } = req.query;
 
   let filtered = images;
@@ -149,44 +154,54 @@ app.get("/new-image", isLoggedIn, (req, res) => {
 });
 
 // Ruta para manejar el envío del formulario
-app.post("/new-image", async (req, res) => {
-  // Verificar si el usuario está logueado
-  if (!req.user) {
-    return res.render('login-required.ejs');
-  }
-
+app.post("/new-image", isLoggedIn, upload.single('image'), async (req, res) => {
   const errors = [];
   const { title, url, date, category } = req.body;
 
+  // Validación de campos requeridos
+  if (!title || !date || !category || (!url && !req.file)) {
+    errors.push("Todos los campos son obligatorios (URL o archivo de imagen requerido).");
+  }
+
   // Validación de título
-  const titlePattern = /^[a-zA-Z0-9 _áéíóúÁÉÍÓÚñÑüÜ]{1,30}$/;
-  if (!titlePattern.test(title)) {
-    errors.push('Título inválido.');
+  if (title) {
+    const titlePattern = /^[a-zA-Z0-9 _áéíóúÁÉÍÓÚñÑüÜ]{1,30}$/;
+    if (!titlePattern.test(title)) {
+      errors.push('El título solo puede contener letras, números, espacios y acentos (máximo 30 caracteres).');
+    }
+  }
+
+  // Validación de categoría
+  const validCategories = ['Paisajes', 'Animales', 'Coches', 'Artisticos', 'Anime', 'Cine', 'Otros'];
+  if (category && !validCategories.includes(category)) {
+    errors.push('Categoría no válida.');
+  }
+
+  // Validación de fecha
+  if (date && isNaN(new Date(date).getTime())) {
+    errors.push('Fecha no válida.');
   }
 
   let imageUrl = url?.trim();
   let finalPath = '';
 
-  // Validar que se haya proporcionado URL
-  if (!imageUrl) {
-    errors.push("Por favor, introduce una URL de imagen.");
-  }
-
-  // Procesar URL
-  if (imageUrl) {
+  // Procesar imagen subida o URL
+  if (req.file) {
+    // Si se subió un archivo, usar su ruta
+    imageUrl = `/uploads/${req.file.filename}`;
+    finalPath = req.file.path;
+  } else if (imageUrl) {
+    // Si se proporcionó una URL, descargar la imagen y guardarla localmente
     try {
       new URL(imageUrl);
     } catch (e) {
       errors.push('URL inválida.');
     }
-
     // Verificar si la imagen ya existe en MongoDB
     const existingImage = await Image.findOne({ url: imageUrl });
     if (existingImage) {
       errors.push(`La imagen con URL: ${imageUrl} ya existe en la base de datos.`);
     }
-
-    // Descargar imagen y guardar localmente
     if (errors.length === 0) {
       try {
         const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
@@ -210,15 +225,25 @@ app.post("/new-image", async (req, res) => {
   try {
     // Obtener color dominante usando la URL local
     const fullUrl = `http://localhost:${PORT}${imageUrl}`;
-    const color = await getDominantColorFromUrl(fullUrl);
+    let color;
+    try {
+      color = await getDominantColorFromUrl(fullUrl);
+    } catch (error) {
+      console.error('Error al obtener el color dominante:', error);
+      color = '#000000'; // Color por defecto en caso de error
+    }
+
+    // Normalizar la fecha para que solo tenga año-mes-día
+    const onlyDate = new Date(date);
+    onlyDate.setUTCHours(0, 0, 0, 0);
 
     // Crear y guardar la nueva imagen en MongoDB
     const newImage = new Image({
-      title,
+      title: title,
       url: imageUrl,
-      date: new Date(date),
-      category,
-      color
+      date: onlyDate,
+      category: category,
+      color: color || '#000000'
     });
 
     await newImage.save();
@@ -234,8 +259,8 @@ app.post("/new-image", async (req, res) => {
   }
 });
 // Ruta para mostrar todas las imágenes desde el archivo JSON
-app.get('/show-images', isLoggedIn, (req, res) => {
-  const images = readImages();
+app.get('/show-images', isLoggedIn, async (req, res) => {
+  const images = await Image.find({});
   const { search } = req.query;
 
   let filtered = images;
